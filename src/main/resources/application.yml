@@ -1,0 +1,105 @@
+server:
+  jetty:
+    threads:
+      acceptors: 4
+      selectors: 8
+      min: 8
+      max: 200
+  port: 8091
+  servlet:
+    context-path: /patient-wx-api
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.204.129:3306/hospital?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      test-on-borrow: true
+      test-while-idle: true
+      max-active: 8
+      min-idle: 4
+      validation-query: SELECT 1
+    username: root
+    password: root
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+  redis:
+    database: 0
+    host: 192.168.204.129
+    port: 6379
+    # password: abc123456
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: -1ms
+        max-idle: 16
+        min-idle: 8
+
+
+  quartz:
+    job-store-type: memory
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.example.hospital.patient.wx.api.db.pojo
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: info
+    com.example.hospital.patient.wx.api.db.dao: warn
+  pattern:
+    console: "%d{yyyy/MM/dd HH:mm:ss}  %-5level  %msg%n"
+
+sa-token:
+  #token名称 (同时也是cookie名称)
+  token-name: token
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  allow-concurrent-login: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  token-style: uuid
+  isReadCookie: false
+
+
+#wechat:
+#  app-id: wxd95115ff57fc84fc
+#  app-secret: a082ac014a3194a41d922015c737e6ec
+#  pay:
+#    v3:
+#      patient-wx-api:
+#        app-id: wxd95115ff57fc84fc
+#        app-v3-secret: 微信商户平台密钥
+#        mch-id: 微信商户平台ID
+#        domain: http://内网穿透的外网IP地址和端口/patient-wx-api
+#        cert-path: apiclient_cert.p12
+
+#tencent:
+#  cloud:
+#    appId: 你的腾讯云APPID
+#    secretId: 你的腾讯云secretId
+#    secretKey: 你的腾讯云secretKey
+#    face:
+#      groupName: hospital
+#      region: ap-beijing
+#  trtc:
+#    appId: TRTC的appId
+#    secretKey: TRTC的secretKey
+#    expire: 86400
+
+minio:
+  endpoint: http://192.168.204.129:9000
+  access-key: admin
+  secret-key: admin123
+
